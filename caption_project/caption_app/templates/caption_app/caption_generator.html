@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Caption Generator</title>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+            text-align: center;
+            padding: 20px;
+        }
+        form {
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #800020; /* 버건디 색 */
+            border-radius: 10px;
+            color: white;
+            width: 500px;
+        }
+        img {
+            max-width: 100%; /* 이미지 크기 제한 */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Caption Generator</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="image" accept="image/*" onchange="previewImage(this)">
+        <br><br>
+        <img id="preview" src="#" alt="미리보기 이미지" style="display: none; max-width: 100%;">
+        <br><br>
+        <button type="submit">캡션 생성</button>
+    </form>
+    {% if generated_caption %}
+    <img id="preview" src="#" alt="미리보기 이미지" style="display: none; max-width: 100%;">
+        <p>{{ generated_caption }}</p>
+    {% endif %}
+    <script>
+        function previewImage(input) {
+            var preview = document.getElementById('preview');
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.style.display = 'block';
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
